@@ -1,0 +1,52 @@
+.model small
+ .STACK 100H
+ .data
+tmsg db "It is a tie",13,10,'$'
+Amsg db "Expected winner will be A",13,10,'$'
+Bmsg db "Expected winner will be B",13,10,'$'
+ .code
+RD PROC near ; pseudo code
+mov ch,0 ; Value = 0
+repit: mov ah,1
+int 21h ; cin >>S
+cmp al,13 ; while (S = \n)
+je goback
+sub al,30h
+mov bh,al
+mov al,ch ;prepare multiplication
+mov ch,10
+mul ch ; value*10
+add al,bh ; value*10 + S
+mov ch,al ;value = value *10 +S
+jmp repit ; go read again
+goback: mov al,ch ;place the result in AL
+ret RD endp
+main: mov ax,@data
+ mov ds,ax
+ mov cl,0 ;initialize loop counteragain:
+ cmp cl,3 ;check if still running loop
+ je done ;already run 3 times
+ call RD
+ mov bl,al ;save first number
+ call RD
+ cmp bl,al ; BL has candidate A votes
+ je tlabel ; go to the tie message
+ jg Alabel ; go to A winner
+ lea dx,Bmsg ; stay and print B winner
+ mov ah,9
+ int 21h
+ jmp eloop ; jump to end of loop
+Alabel: lea dx,Amsg ; print A winner
+ mov ah,9
+ int 21h
+ jmp eloop ; jump to end of loop
+tlabel: lea dx,tmsg ; print tie message
+ mov ah,9
+ int 21h
+
+eloop: add cl,1 ; increment counter
+ jmp done
+ again ; jump to beginning of loop
+done: mov ah,4ch
+ int 21h
+ end main
