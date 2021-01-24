@@ -1,0 +1,82 @@
+;ethan coyle, jonathan hogan
+; lab 11
+;cmps 2084
+
+.model small
+        .STACK 100h
+        .data
+
+       
+ZIRK    DB 15 DUP(4); Array Declaration,
+               ; V1 reserves 15 bytes all initialized to zeros currently
+
+        .code
+RD      PROC NEAR
+        MOV CH,0    ; Value = 0
+       
+repit:  MOV AH,1
+        int 21H     ; cin >> S
+        CMP AL,13   ; if digit = endl or \n
+        JE goback
+        sub al,30h
+        MOV BH,AL
+        MOV AL,CH   ; Prepare Multiplication
+        MOV CH,10
+        MUL CH      ; value mult by10
+        ADD AL,BH   ; value mult by 10 add "S
+        MOV CH,AL   ; value = value mult by 10 add S
+        JMP repit   ; Go read again
+       
+goback: MOV AL,CH   ; Place the result in AL
+       
+        RET
+RD      endp
+
+Main:   MOV AX,@DATA
+        MOV DS,AX
+        MOV CL,0
+        LEA BX,ZIRK      ; Placing the address of the first Array element in BX
+        MOV [BX],DL     ; store dl into array bx
+       
+Again:  
+        CALL RD
+
+       
+        CMP AL,0        ;whil    e (number is not equal to 0)
+        JE Dol
+                       
+        MOV DL,31       ;AND 31 is locking in 5 right bits.
+        AND AL,DL       ;Perform the AND operation
+        ADD AL,64       ;add 4 on the left bits
+       
+       
+        MOV DL,AL
+       
+        MOV [BX],DL    
+        ADD BX,1
+
+ 
+       
+        JMP Eloop       ; Start the loop again for next number              
+Eloop:  JMP Again
+
+Dol:                    ; add a dollars sign
+
+        Mov DL, '$'
+        ADD BX,1
+        ;MOV DL,$'      ; put a $ in DL
+        MOV [BX],DL     ; stores dl into next element in array
+        JMP Print
+
+Print:      
+       
+        LEA DX,ZIRK
+        MOV AH,9
+        INT 21H             ; print until find a $
+
+       
+        JMP Done
+Done:
+        MOV AH,4CH
+        INT 21H
+        END Main
