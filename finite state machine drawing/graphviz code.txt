@@ -1,0 +1,47 @@
+digraph G
+{
+    rankdir=LR;
+    overlap = false;
+//splines = true;
+    begin->a0[label=1]
+    begin->a1[label=0]
+    a0[label= "A0"]
+    a1[label= "A1"]
+    
+     b0[label= "b0"]
+    b1[label= "b1"]
+    b2[label= "b2"]
+    c0[label= "c0"]
+    c1[label= "c1"]
+    c2[label= "c2"]
+    red[label= "Red"]
+    green[label= "Green"]
+    begin[label= "start"]
+    off[label=off]
+    off->begin
+    
+    a0->b0[label="1"]
+    a0->b1[label="0"]
+     
+    a1->b1[label="1"]
+    a1->b2[label="0"]
+    
+    b0->c0[label="0/1"]
+    b1->c1[label="0"] 
+    b1->c0[label="1"]
+    
+    b2->c1[label="1"]
+    b2->c2[label="0"]
+    
+     c0->green[label="d=0/1"]
+     c1->green[label="d= 1"]
+    c1->red[label="d=0"]
+    c2->red[label= "d= 0/1"]
+    
+    red->begin
+    
+    green->begin
+    
+    
+    
+}
