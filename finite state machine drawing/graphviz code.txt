@@ -18,7 +18,7 @@ digraph G
     green[label= "Green"]
     begin[label= "start"]
     off[label=off]
-    off->begin
+    off->begin[label=A]
     
     a0->b0[label="1"]
     a0->b1[label="0"]
@@ -38,9 +38,9 @@ digraph G
     c1->red[label="d=0"]
     c2->red[label= "d= 0/1"]
     
-    red->begin
+    red->begin[label=A]
     
-    green->begin
+    green->begin[label=A]
     
     
     
